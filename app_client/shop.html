@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>BOLYBI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Muli|Nobile:700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="./css/style.css">
+  </head>
+  <body>
+    <div id='root'>
+      <div class="content-area">
+          <section class="page-section">
+              <div class="container-fluid container-shop">
+                  <div class="row">
+                      <div class="col-md-12 col-lg-12 content" id="content">
+                          <!-- SHOP SORTING -->
+                          <div class="shop-sorting">
+                              <div class="row">
+                                  <div class="col-sm-12 text-center">
+                                      <span class="hidden-xs">Sort by</span>
+                                      <span class="select-wrapper hidden-xs">
+                                      <select>
+                                          <option value="name">Product Name</option>
+                                          <option value="-price">HIGHEST PRICE</option>
+                                          <option value="price">LOWEST PRICE</option>
+                                      </select>
+                                  </span>
+                                      <span>Show me</span>
+                                      <span class="select-wrapper">
+                                      <select>
+                                          <option value="" selected="">All Products</option>
+                                          <option value="Tennis">Tennis</option>
+                                          <option value="Running">Running</option>
+                                          <option value="Training & Gym">Training & Gym</option>
+                                      </select>
+                                  </span>
+                                  </div>
+                              </div>
+                          </div>
+                          <!-- /SHOP SORTING -->
+
+                          <!-- PRODUCT GRID -->
+                          <div class="row products grid">
+                              <div class="col-md-4 col-sm-6" id="1" data-ng-repeat="product in products | orderBy: highPrice | filter:showCategory">
+                                  <div class="thumbnail no-border no-padding">
+                                      <div class="media">
+                                          <a class="media-link" href="#/products/1">
+                                              <img alt="" src="./images/bg_1.jpg">
+                                          </a>
+                                      </div>
+                                      <div class="caption text-center">
+                                          <h4 class="caption-title ng-binding">Product1</h4>
+                                          <div class="price ng-binding">$30.00</div>
+                                      </div>
+                                  </div>
+                              </div>
+                              <div class="col-md-4 col-sm-6" id="2" data-ng-repeat="product in products | orderBy: highPrice | filter:showCategory">
+                                  <div class="thumbnail no-border no-padding">
+                                      <div class="media">
+                                          <a class="media-link" href="#/products/2">
+                                              <img alt="" src="./images/bg_2.jpg">
+                                          </a>
+                                      </div>
+                                      <div class="caption text-center">
+                                          <h4 class="caption-title ng-binding">Product2</h4>
+                                          <div class="price ng-binding">$40.00</div>
+                                      </div>
+                                  </div>
+                              </div>
+                              <div class="col-md-4 col-sm-6" id="3" data-ng-repeat="product in products | orderBy: highPrice | filter:showCategory">
+                                  <div class="thumbnail no-border no-padding">
+                                      <div class="media">
+                                          <a class="media-link" href="#/products/3">
+                                              <img alt="" src="./images/bg_3.jpg">
+                                          </a>
+                                      </div>
+                                      <div class="caption text-center">
+                                          <h4 class="caption-title ng-binding">Product3</h4>
+                                          <div class="price ng-binding">$55.00</div>
+                                      </div>
+                                  </div>
+                              </div>
+                              <div class="col-md-4 col-sm-6" id="4" data-ng-repeat="product in products | orderBy: highPrice | filter:showCategory">
+                                  <div class="thumbnail no-border no-padding">
+                                      <div class="media">
+                                          <a class="media-link" href="#/products/4">
+                                              <img alt="" src="./images/bg_2.jpg">
+                                          </a>
+                                      </div>
+                                      <div class="caption text-center">
+                                          <h4 class="caption-title ng-binding">Product4</h4>
+                                          <div class="price ng-binding">$30.00</div>
+                                      </div>
+                                  </div>
+                              </div>
+                              <div class="col-md-4 col-sm-6" id="5" data-ng-repeat="product in products | orderBy: highPrice | filter:showCategory">
+                                  <div class="thumbnail no-border no-padding">
+                                      <div class="media">
+                                          <a class="media-link" href="#/products/5">
+                                              <img alt="" src="./images/bg_3.jpg">
+                                          </a>
+                                      </div>
+                                      <div class="caption text-center">
+                                          <h4 class="caption-title">Product5</h4>
+                                          <div class="price">$40.00</div>
+                                      </div>
+                                  </div>
+                              </div>
+                              <div class="col-md-4 col-sm-6" id="6" data-ng-repeat="product in products | orderBy: highPrice | filter:showCategory">
+                                  <div class="thumbnail no-border no-padding">
+                                      <div class="media">
+                                          <a class="media-link" href="#/products/6">
+                                              <img alt="" src="./images/bg_1.jpg">
+                                          </a>
+                                      </div>
+                                      <div class="caption text-center">
+                                          <h4 class="caption-title">Product6</h4>
+                                          <div class="price">$55.00</div>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </section>
+      </div>
+    </div>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/react@15/dist/react.js"></script>
+    <script src="https://unpkg.com/react-dom@15/dist/react-dom.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.38/browser.min.js"></script>
+  </body>
+</html>
