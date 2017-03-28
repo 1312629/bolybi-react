@@ -9,28 +9,44 @@ var sendJSONresponse = function(res, status, content) {
 
 var getUser = function(req, res, callback) {
   console.log("Finding user id with email " + req.payload.email);
-  if (req.payload.email) {
-    User
-      .findOne({ email : req.payload.email })
-      .exec(function(err, user) {
-        if (!user) {
-          sendJSONresponse(res, 404, {
-            "message": "User not found!"
+  if (req.payload.fbId) {
+        User
+          .findOne({fbId : req.payload.fbId})
+          .exec(function(err, user) {
+            if (!user) {
+              sendJSONresponse(res, 404, {
+                "message": "User not found!"
+              });
+              return;
+            } else if (err) {
+              console.log(err);
+              sendJSONresponse(res, 404, err);
+              return;
+            }
+            console.log(user);
+            callback(req, res, user._id);
           });
-          return;
-        } else if (err) {
-          console.log(err);
-          sendJSONresponse(res, 404, err);
-          return;
-        }
-        console.log(user);
-        if (user.type != "Admin") {
-            sendJSONresponse(res, 404, {'message': 'Restricted Permission!'});
-            return;
-        }
-        callback(req, res, user._id);
-      });
-
+    } else if (req.payload.email) {
+        User
+          .findOne({ email : req.payload.email })
+          .exec(function(err, user) {
+            if (!user) {
+              sendJSONresponse(res, 404, {
+                "message": "User not found!"
+              });
+              return;
+            } else if (err) {
+              console.log(err);
+              sendJSONresponse(res, 404, err);
+              return;
+            }
+            console.log(user);
+            if (user.type != "Admin") {
+                sendJSONresponse(res, 404, {'message': 'Restricted Permission!'});
+                return;
+            }
+            callback(req, res, user._id);
+          });
   } else {
     sendJSONresponse(res, 404, {
       "message": "User not found!"

@@ -418,6 +418,12 @@ function getReports(fullfill){
     });
 };
 
+function loginByFb(info, fullfill, reject){
+    $.post("/api/auth/facebook", {access_token: info.accessToken})
+        .done(fullfill)
+        .fail(reject);
+};
+
 /* ------------------------------   CLIENT   ----------------------------------*/
 
 var InfoUser = React.createClass({
@@ -835,6 +841,14 @@ var Login = React.createClass({
             return false;
         }
     },
+    direct() {
+        var that = this;
+        if (isAdmin()) {
+            setTimeout(function(){that.props.router.push('/admin');}, 500);
+        } else {
+            setTimeout(function(){that.props.router.push('/');}, 500);
+        }
+    },
     checkName() {
         if (this.refs.name.value != null && this.refs.name.value.trim().length > 0) {
             return true;
@@ -868,11 +882,7 @@ var Login = React.createClass({
                     that.refs.btnLogin.innerHTML = "Login";
                     $('.msg_form').html("Login Succesfully!");
                     getCart();
-                    if (isAdmin()) {
-                        setTimeout(function(){that.props.router.push('/admin');}, 1500);
-                    } else {
-                        setTimeout(function(){that.props.router.push('/');}, 1500);
-                    }
+                    that.direct();
                 })
                 .fail(function(xhr, status, err){
                     that.refs.btnLogin.innerHTML = "Login";
@@ -1063,6 +1073,7 @@ var Login = React.createClass({
                                                     Login
                                                 </button>
                                             </div>
+                                            <FBLoginBtn fb={FB} direct={this.direct}/>
                                         </div>
                                     )
                                 }
@@ -2167,7 +2178,7 @@ var BoxOrders = React.createClass({
                                         return (
                                             <tr key={index}>
                                                 <td>{order._id}</td>
-                                                <td className="text-center">{order.owner.email}</td>
+                                                <td className="text-center">{order.owner.name}</td>
                                                 <td className="text-center">{order.createdDate.split('T')[0]}</td>
                                                 <td className="text-center">{order.status}</td>
                                                 <td className="text-right">{format(order.total)}</td>
@@ -2187,13 +2198,59 @@ var BoxOrders = React.createClass({
     }
 });
 
-//var GraphOrders = React.createClass({
-//    render() {
-//        return ( 
-//                <LineChart data={this.props.children}/>
-//            );
-//      }
-//});
+var FBLoginBtn = React.createClass({
+    getInitialState(){
+        this.FB = this.props.fb;
+        this.direct = this.props.direct;
+        return {
+            message: ""
+        };
+    },
+    componentDidMount() {
+      this.FB.Event.subscribe('auth.logout', 
+         this.onLogout.bind(this));
+      this.FB.Event.subscribe('auth.statusChange', 
+         this.onStatusChange.bind(this));
+        this.FB.XFBML.parse();
+    },
+    componentDidUpdate() {
+        this.FB.XFBML.parse();    
+    },
+    onStatusChange(response) {
+        var that = this;
+        if( response.status === "connected" ) {
+            loginByFb(response.authResponse, function(data){
+                Cookies.set("token", data.token);
+                getCart();
+                that.direct();
+            }, function(xhr, status, err){
+                FB.logout(function(response) {
+                    console.log("logout!");
+                    alert(xhr.responseJSON.message);
+                });
+            });
+        }
+    },
+    onLogout(response) {
+      this.setState({
+         message: ""
+      });
+    },
+    render() {
+        return (
+            <div className="col-md-12 col-xs-12 text-center">
+                <div 
+                   className="fb-login-button" 
+                   data-max-rows="1" 
+                   data-size="xlarge" 
+                   data-show-faces="false" 
+                   data-auto-logout-link="false"
+                   >
+                </div>
+             </div>
+        );
+    }
+});
 
 var chartOptions = {
     title: {
@@ -2236,6 +2293,12 @@ var chartOptions = {
     },
     responsive: true
 };
+
+function imageFormatter(value) {
+    console.log("test");
+    console.log(value);
+    return '<img src="'+value+'" />';
+}
 
 var SvHome = React.createClass({
     getInitialState() {
@@ -2743,12 +2806,6 @@ var NewProduct = React.createClass({
         );
     }
 });
-
-function imageFormatter(value) {
-    console.log("test");
-    console.log(value);
-    return '<img src="'+value+'" />';
-}
 
 var ViewProduct = React.createClass({
     getInitialState() {

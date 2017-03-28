@@ -14,6 +14,7 @@ var ctrlTypes = require('../controllers/types');
 var multer = require('multer');
 var crypto = require('crypto');
 var path = require('path');
+var passport = require('passport');
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -46,6 +47,7 @@ router.get('/users/login', ctrlUsers.login);
 // auth
 router.post('/register', upload.array('avatar'), ctrlAuth.register);
 router.post('/login', ctrlAuth.login);
+router.post('/auth/facebook', ctrlAuth.loginFB);
 
 // orders
 router.get('/orders', auth, ctrlOrders.listOrders);

@@ -72,3 +72,21 @@ module.exports.login = function(req, res) {
         }
     }) (req, res);
 }
+
+module.exports.loginFB = function(req, res) {
+    passport.authenticate('facebook-token', function(err, user, info) {
+        var token;
+        if (err) {
+            sendJSONresponse(res, 404, err);
+            return;
+        }
+        console.log(user);
+        if (user) {
+            token = user.generateJwt();
+            sendJSONresponse(res, 200, {"token": token});
+            return;
+        } else {
+            sendJSONresponse(res, 401, {"message": "Account doesn't exist!"});
+        }
+    }) (req, res);
+}

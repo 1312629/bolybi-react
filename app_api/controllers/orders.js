@@ -9,21 +9,37 @@ var sendJSONresponse = function(res, status, content) {
 };
 
 var checkUser = function(req, res, callback) {
-  if (req.payload.email) {
-    User
-      .findOne({email : req.payload.email})
-      .exec(function(err, user) {
-        if (!user) {
-          sendJSONresponse(res, 404, {
-            "message": "User not found!"
+  if (req.payload.fbId) {
+        User
+          .findOne({fbId : req.payload.fbId})
+          .exec(function(err, user) {
+            if (!user) {
+              sendJSONresponse(res, 404, {
+                "message": "User not found!"
+              });
+              return;
+            } else if (err) {
+              console.log(err);
+              sendJSONresponse(res, 404, err);
+              return;
+            }
+            callback(req, res, user);
           });
-          return;
-        } else if (err) {
-          sendJSONresponse(res, 404, err);
-          return;
-        }
-        callback(req, res, user);
-      });
+    } else if (req.payload.email) {
+        User
+          .findOne({email : req.payload.email})
+          .exec(function(err, user) {
+            if (!user) {
+              sendJSONresponse(res, 404, {
+                "message": "User not found!"
+              });
+              return;
+            } else if (err) {
+              sendJSONresponse(res, 404, err);
+              return;
+            }
+            callback(req, res, user);
+          });
 
   } else {
         sendJSONresponse(res, 404, {

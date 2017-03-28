@@ -10,31 +10,49 @@ var sendJSONresponse = function(res, status, content) {
 };
 
 var getCartIdByUser = function(req, res, callback) {
-  console.log("Finding cart id with email " + req.payload.email);
-  if (req.payload.email) {
-    User
-      .findOne({email : req.payload.email})
-      .exec(function(err, user) {
-        if (!user) {
-          sendJSONresponse(res, 404, {
-            "message": "User not found!"
+    console.log(req.payload);
+    console.log("Finding cart id with email " + req.payload.email);
+    console.log("Finding cart id with fb id " + req.payload.fbId);
+    if (req.payload.fbId) {
+        User
+          .findOne({fbId : req.payload.fbId})
+          .exec(function(err, user) {
+            if (!user) {
+              sendJSONresponse(res, 404, {
+                "message": "User not found!"
+              });
+              return;
+            } else if (err) {
+              console.log(err);
+              sendJSONresponse(res, 404, err);
+              return;
+            }
+            console.log(user);
+            callback(req, res, user.cart);
           });
-          return;
-        } else if (err) {
-          console.log(err);
-          sendJSONresponse(res, 404, err);
-          return;
-        }
-        console.log(user);
-        callback(req, res, user.cart);
-      });
-
-  } else {
+    } else if (req.payload.email) {
+        User
+          .findOne({email : req.payload.email})
+          .exec(function(err, user) {
+            if (!user) {
+              sendJSONresponse(res, 404, {
+                "message": "User not found!"
+              });
+              return;
+            } else if (err) {
+              console.log(err);
+              sendJSONresponse(res, 404, err);
+              return;
+            }
+            console.log(user);
+            callback(req, res, user.cart);
+          });
+    } else {
         sendJSONresponse(res, 404, {
           "message": "User not found!"
         });
         return;
-  }
+    }
 };
 
 var findPrice = function(id, items) {

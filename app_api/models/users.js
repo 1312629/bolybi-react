@@ -3,7 +3,8 @@ var crypto = require('crypto');
 var jwt = require('jsonwebtoken');
 
 var userSchema = new mongoose.Schema({
-    email: {type: String, required: true, unique: true},
+    email: String,
+    fbId: String,
     hash: String,
     salt: String,
     type: {type: String, default: 'User'},
@@ -33,6 +34,7 @@ userSchema.methods.generateJwt = function() {
     return jwt.sign({
         _id: this._id,
         email: this.email,
+        fbId: this.fbId,
         name: this.name,
         type: this.type,
         avatarURL: this.avatarURL,
