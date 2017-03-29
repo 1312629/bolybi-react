@@ -394,7 +394,7 @@ function formatRpOrders(data){
             backgroundColor: 'rgba(172, 70, 60, 0)',
             borderColor: 'rgba(172, 70, 60, 1)',
             borderWidth: 2,
-            data: datas 
+            data: _.reverse(datas) 
       }, {
             type: 'bar',
             yAxisID: "y-axis-0",
@@ -402,7 +402,7 @@ function formatRpOrders(data){
             backgroundColor: 'rgba(75, 192, 192, 0.2)',
             borderColor: 'rgba(75, 192, 192, 1)',
             borderWidth: 3,
-            data: datas2 
+            data: _.reverse(datas2)  
       }]
     };
     
@@ -1064,16 +1064,21 @@ var Login = React.createClass({
                                     ) : (
                                         <div className="row">
                                             <div className="col-md-6 col-xs-12 text-center">
-                                                <button onClick={this.changeMode} className="btn-theme form-btn col-md-12 col-xs-12">
-                                                    register
-                                                </button>
+                                                <FBLoginBtn fb={FB} direct={this.direct}/>
                                             </div>
                                             <div className="col-md-6 col-xs-12 text-center">
                                                 <button ref='btnLogin' type="submit" className="btn-theme form-btn col-md-12">
                                                     Login
                                                 </button>
                                             </div>
-                                            <FBLoginBtn fb={FB} direct={this.direct}/>
+                                            <div className="col-md-12 hr">
+                                                <h3><span>Don't have an account</span></h3>
+                                            </div>
+                                            <div className="col-md-12 text-center">
+                                                <button onClick={this.changeMode} className="btn-theme form-btn col-md-offset-3 col-md-6 col-xs-12">
+                                                    register
+                                                </button>
+                                            </div>
                                         </div>
                                     )
                                 }
@@ -2200,6 +2205,11 @@ var BoxOrders = React.createClass({
 
 var FBLoginBtn = React.createClass({
     getInitialState(){
+        FB.init({
+            appId      : '939757569488617',
+            xfbml      : true,
+            version    : 'v2.8'
+        });
         this.FB = this.props.fb;
         this.direct = this.props.direct;
         return {
@@ -2207,47 +2217,58 @@ var FBLoginBtn = React.createClass({
         };
     },
     componentDidMount() {
-      this.FB.Event.subscribe('auth.logout', 
-         this.onLogout.bind(this));
       this.FB.Event.subscribe('auth.statusChange', 
          this.onStatusChange.bind(this));
-        this.FB.XFBML.parse();
+//        this.FB.XFBML.parse();
     },
     componentDidUpdate() {
-        this.FB.XFBML.parse();    
+//        this.FB.XFBML.parse();    
     },
     onStatusChange(response) {
         var that = this;
         if( response.status === "connected" ) {
-            loginByFb(response.authResponse, function(data){
-                Cookies.set("token", data.token);
-                getCart();
-                that.direct();
-            }, function(xhr, status, err){
-                FB.logout(function(response) {
-                    console.log("logout!");
-                    alert(xhr.responseJSON.message);
-                });
-            });
+//            loginByFb(response.authResponse, function(data){
+//                Cookies.set("token", data.token);
+//                getCart();
+//                that.direct();
+//            }, function(xhr, status, err){
+//                FB.logout(function(response) {
+//                    console.log("logout!");
+//                    alert(xhr.responseJSON.message);
+//                });
+//            });
         }
     },
-    onLogout(response) {
-      this.setState({
-         message: ""
-      });
+    login() {
+        var that = this;
+        this.FB.login(function(response) {
+            if (response.authResponse) {
+                loginByFb(response.authResponse, function(data){
+                    Cookies.set("token", data.token);
+                    getCart();
+                    that.direct();
+                }, function(xhr, status, err){
+                    FB.logout(function(response) {
+                        console.log("logout!");
+                        alert(xhr.responseJSON.message);
+                    });
+                });
+            }
+        }, {scope: 'email,public_profile'}); 
     },
     render() {
         return (
-            <div className="col-md-12 col-xs-12 text-center">
-                <div 
-                   className="fb-login-button" 
-                   data-max-rows="1" 
-                   data-size="xlarge" 
-                   data-show-faces="false" 
-                   data-auto-logout-link="false"
-                   >
-                </div>
-             </div>
+            <button onClick={this.login} className="btn-theme form-btn fb-btn col-md-12"><i className="fa fa-facebook" aria-hidden="true"></i>Login</button>
+//            <div className="col-md-12 col-xs-12 text-center">
+//                <div 
+//                   className="fb-login-button" 
+//                   data-max-rows="1" 
+//                   data-size="xlarge" 
+//                   data-show-faces="false" 
+//                   data-auto-logout-link="false"
+//                   >
+//                </div>
+//             </div>
         );
     }
 });
